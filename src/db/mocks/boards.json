@@ -1,1 +1,48 @@
-[]
+[
+  {
+    "title": "Project_1",
+    "columns": [
+      {
+        "title": "To Do",
+        "order": 0
+      },
+      {
+        "title": "In Develop",
+        "order": 1
+      },
+      {
+        "title": "In Test",
+        "order": 2
+      },
+      {
+        "title": "Review",
+        "order": 3
+      }
+    ]
+  },
+  {
+    "title": "Project_2",
+    "columns": [
+      {
+        "title": "Defined",
+        "order": 0
+      },
+      {
+        "title": "In Development",
+        "order": 1
+      },
+      {
+        "title": "In Testing",
+        "order": 2
+      },
+      {
+        "title": "In Review",
+        "order": 3
+      },
+      {
+        "title": "Accepted",
+        "order": 4
+      }
+    ]
+  }
+]

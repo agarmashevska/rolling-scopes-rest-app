@@ -69,39 +69,36 @@ const updateEntity = (table, id, entity) => {
   return getEntity(table, id);
 };
 
-const initEntityDB = (entities = [], entityDB, Model) => {
+const initEntityDB = (entities = [], Model) => {
   if (entities.length) {
-    return entities.forEach(users => entityDB.push(new Model(users)));
+    return entities.map(el => new Model(el));
   }
 
-  const model = new Model();
-  entityDB.push(model);
-  return model;
+  return [new Model()];
 };
 
-const initDB = (users = []) => {
-  initEntityDB(users, db.Users, User);
+const initDB = (users = [], boards = [], tasks = []) => {
+  const usersCreated = initEntityDB(users, User);
+  const boardsCreated = initEntityDB(boards, Board);
+  const tasksCreated = initEntityDB(tasks, Task);
 
-  const toDoColumn = { title: 'To Do' };
-  const inDevelopmentColumn = { title: 'In Development', order: 1 };
-  const inTestColumn = { title: 'In Test', order: 2 };
-
-  const board1 = new Board({
-    title: 'Project 1',
-    columns: [toDoColumn, inDevelopmentColumn, inTestColumn]
+  const tasksUpdated = (tasksCreated || []).map(task => {
+    const randomBoard =
+      boardsCreated[Math.floor(Math.random() * boardsCreated.length)];
+    const randomColumnOfBoard =
+      randomBoard.columns[
+        Math.floor(Math.random() * randomBoard.columns.length)
+      ];
+    task.boardId = randomBoard.id;
+    task.columnId = randomColumnOfBoard.id;
+    task.userId =
+      usersCreated[Math.floor(Math.random() * usersCreated.length)].id;
+    return task;
   });
 
-  const board2 = new Board({
-    title: 'Project 2',
-    columns: [toDoColumn, inDevelopmentColumn, inTestColumn]
-  });
-
-  const task1 = new Task({ title: 'task 1', boardId: board1.id });
-  const task2 = new Task({ title: 'task 2', boardId: board1.id });
-  const task3 = new Task({ title: 'task 3', boardId: board2.id });
-
-  db.Boards.push(board1, board2);
-  db.Tasks.push(task1, task2, task3);
+  usersCreated.forEach(user => db.Users.push(user));
+  tasksUpdated.forEach(task => db.Tasks.push(task));
+  boardsCreated.forEach(board => db.Boards.push(board));
 };
 
 module.exports = {
