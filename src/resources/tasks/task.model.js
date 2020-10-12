@@ -1,4 +1,8 @@
 const uuid = require('uuid');
+const pick = require('lodash/fp/pick');
+const compose = require('lodash/fp/compose');
+const isNil = require('lodash/fp/isNil');
+const omitBy = require('lodash/fp/omitBy');
 
 class Task {
   constructor({
@@ -21,6 +25,13 @@ class Task {
 
   static toResponse(task) {
     return task;
+  }
+
+  static fromRequest(requestData) {
+    return compose(
+      omitBy(isNil),
+      pick(['title', 'order', 'description', 'userId', 'boardId', 'columnId'])
+    )(requestData);
   }
 }
 

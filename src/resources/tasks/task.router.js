@@ -22,10 +22,13 @@ router.route('/:id').get(async (req, res) => {
 
 router.route('/').post(async (req, res) => {
   try {
-    const task = await taskService.save(req.params.boardId, req.body);
+    const task = await taskService.save(
+      req.params.boardId,
+      Task.fromRequest(req.body)
+    );
     res.json(Task.toResponse(task));
   } catch (err) {
-    res.status(500);
+    res.status(422).send(err);
   }
 });
 
@@ -34,16 +37,19 @@ router.route('/:id').delete(async (req, res) => {
     await taskService.remove(req.params.id);
     res.sendStatus(200);
   } catch (err) {
-    res.sendStatus(404);
+    res.status(404).send(err);
   }
 });
 
 router.route('/:id').put(async (req, res) => {
   try {
-    const task = await taskService.update(req.params.id, req.body);
-    res.status(200).json(task);
+    const task = await taskService.update(
+      req.params.id,
+      Task.fromRequest(req.body)
+    );
+    res.status(200).json(Task.toResponse(task));
   } catch (err) {
-    res.status(404);
+    res.status(404).send(err);
   }
 });
 
