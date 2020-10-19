@@ -5,7 +5,6 @@ const matchesProperty = require('lodash/fp/matchesProperty');
 const remove = require('lodash/fp/remove');
 const findIndex = require('lodash/fp/findIndex');
 const find = require('lodash/fp/find');
-const isNil = require('lodash/fp/isNil');
 const map = require('lodash/fp/map');
 
 const User = require('../resources/users/user.model');
@@ -45,7 +44,7 @@ const removeEntity = (table, id) => {
   const entities = db[table];
   const entityToRemoveIndex = findIndex(['id', id], entities);
 
-  if (isNil(entityToRemoveIndex)) {
+  if (entityToRemoveIndex < 0) {
     return Promise.reject(`Entity to remove with id ${id} was NOT found`);
   }
 
@@ -60,7 +59,7 @@ const removeEntity = (table, id) => {
 const updateEntity = (table, id, entity) => {
   const entities = db[table];
   const entityToUpdateIndex = findIndex(matchesProperty('id', id), entities);
-  if (!entityToUpdateIndex) {
+  if (entityToUpdateIndex < 0) {
     return Promise.reject(`Entity to update with id ${id} was NOT found`);
   }
 

@@ -16,6 +16,8 @@ const createNotFoundError = message => new NotFoundError(message);
 const createWriteError = message => new WriteError(message);
 
 module.exports = {
+  WriteError,
+  NotFoundError,
   createNotFoundError,
   createWriteError
 };
