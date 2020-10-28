@@ -1,33 +1,40 @@
+const mongoose = require('mongoose');
+
 const uuid = require('uuid');
 const pick = require('lodash/fp/pick');
 const compose = require('lodash/fp/compose');
 const isNil = require('lodash/fp/isNil');
 const omitBy = require('lodash/fp/omitBy');
 
-class User {
-  constructor({
-    id = uuid(),
-    name = 'USER',
-    login = 'user',
-    password = 'P@55w0rd'
-  } = {}) {
-    this.id = id;
-    this.name = name;
-    this.login = login;
-    this.password = password;
-  }
+const userSchema = new mongoose.Schema(
+  {
+    name: String,
+    login: String,
+    password: String,
+    _id: {
+      type: String,
+      default: uuid
+    }
+  },
+  { id: false, versionKey: false }
+);
 
-  static toResponse(user) {
-    const { id, name, login } = user;
-    return { id, name, login };
-  }
+userSchema.virtual('id').get(function() {
+  return this._id;
+});
 
-  static fromRequest(requestData) {
-    return compose(
-      omitBy(isNil),
-      pick(['login', 'name', 'password'])
-    )(requestData);
-  }
-}
+userSchema.set('toObject', { virtuals: true });
+
+userSchema.statics.toResponse = user => {
+  const { id, name, login } = user;
+  return { id, name, login };
+};
+
+userSchema.statics.fromRequest = compose(
+  omitBy(isNil),
+  pick(['login', 'name', 'password'])
+);
+
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

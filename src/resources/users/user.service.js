@@ -1,11 +1,10 @@
-const User = require('./user.model');
-const usersRepo = require('./user.memory.repository');
+const usersRepo = require('./users.db.repository');
 
 const getAll = () => usersRepo.getAll();
 
 const getById = id => usersRepo.get(id);
 
-const save = user => usersRepo.save(new User(user));
+const save = user => usersRepo.save(user);
 
 const remove = id => usersRepo.remove(id);
 
